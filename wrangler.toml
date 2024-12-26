@@ -4,9 +4,22 @@ main = "src/index.ts"
 compatibility_date = "2024-12-24"
 compatibility_flags = ["nodejs_compat"]
 
+workers_dev = false
+
 [observability]
 enabled = true
 
 [[kv_namespaces]]
 binding = "rss"
 id = "80a0b45a3b3c43979dfc1fbad675a647"
+
+[triggers]
+crons = [ "0 15 * * *"]
+
+[[queues.producers]]
+queue = "slackqueue"
+binding = "SLACK_NOTIFIER"
+
+[[queues.producers]]
+queue = "discordqueue"
+binding = "DQUEUE"
