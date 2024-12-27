@@ -1,21 +1,21 @@
-import robotsParser from "robots-parser";
 import { XMLParser } from "fast-xml-parser";
+import robotsParser from "robots-parser";
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		await rssHandler(env);
-		return new Response('Hello World!');
+		return new Response("Hello World!");
 	},
 	async scheduled(controller: ScheduledController, env: Env): Promise<void> {
 		await rssHandler(env);
-	}
+	},
 } satisfies ExportedHandler<Env>;
 
-async function rssHandler(env: Env){
-	const keys = (await env.rss.list()).keys
+async function rssHandler(env: Env) {
+	const keys = (await env.rss.list()).keys;
 	console.info("keys", keys);
 
-	for (const { name:rssURL } of keys) {
+	for (const { name: rssURL } of keys) {
 		const allow = await isAllowByRobots(rssURL);
 		if (!allow) {
 			console.info(`Disallow: ${rssURL}`);
@@ -23,13 +23,13 @@ async function rssHandler(env: Env){
 		}
 		console.info(`Allow: ${rssURL}`);
 
-		const lastItem = await env.rss.get(rssURL) ?? "";
+		const lastItem = (await env.rss.get(rssURL)) ?? "";
 
 		const rss = await fetchRSS(rssURL);
 		console.info(rss.channel.title);
 
 		const rssItems = rss.item;
-		const uncheckedRssItems = []
+		const uncheckedRssItems = [];
 		let latestItem = lastItem;
 		for (const item of rssItems) {
 			if (item.link === lastItem) {
@@ -74,11 +74,7 @@ async function fetchRSS(url: string) {
 	return xml.RDF;
 }
 
-function createSlackMessage(
-	channel: string,
-	title: string,
-	items: XMLItem[],
-) {
+function createSlackMessage(channel: string, title: string, items: XMLItem[]) {
 	const blocks = [];
 	for (const item of items) {
 		blocks.push({
@@ -123,7 +119,6 @@ export function createDiscordMessage(title: string, items: XMLItem[]) {
 	};
 }
 
-
 type XMLContemt = {
 	RDF: {
 		channel: XMLChannel;
@@ -134,7 +129,7 @@ type XMLChannel = {
 	title: string;
 	link: string;
 	description: string;
-}
+};
 
 type XMLItem = {
 	title: string;

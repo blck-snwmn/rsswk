@@ -1,7 +1,13 @@
 // test/index.spec.ts
-import { env, createExecutionContext, waitOnExecutionContext, SELF, fetchMock } from 'cloudflare:test';
-import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
-import worker from '../src/index';
+import {
+	SELF,
+	createExecutionContext,
+	env,
+	fetchMock,
+	waitOnExecutionContext,
+} from "cloudflare:test";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import worker from "../src/index";
 
 // For now, you'll need to do something like this to get a correctly-typed
 // `Request` to pass to `worker.fetch()`.
@@ -19,17 +25,17 @@ afterEach(() => {
 	fetchMock.assertNoPendingInterceptors();
 });
 
-describe('test fetch', () => {
-	it('call once', async () => {
+describe("test fetch", () => {
+	it("call once", async () => {
 		const sendSpySlack = vi
-		.spyOn(env.SLACK_NOTIFIER, "send")
-		.mockImplementation(async () => {});
+			.spyOn(env.SLACK_NOTIFIER, "send")
+			.mockImplementation(async () => {});
 
 		const sendSpyDiscord = vi
-		.spyOn(env.DQUEUE, "send")
-		.mockImplementation(async () => {});
+			.spyOn(env.DQUEUE, "send")
+			.mockImplementation(async () => {});
 
-		await env.rss.put('http://example.com', '');
+		await env.rss.put("http://example.com", "");
 
 		fetchMock
 			.get("http://example.com")
@@ -37,7 +43,9 @@ describe('test fetch', () => {
 				path: "/",
 				method: "GET",
 			})
-			.reply(200, `<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+			.reply(
+				200,
+				`<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
 						<channel>
 							<title>CHANNEL_TITLE</title>
 							<link>http://example.com/chanel</link>
@@ -56,7 +64,7 @@ describe('test fetch', () => {
 					</rdf:RDF>`,
 			);
 
-		const request = new IncomingRequest('http://example.com');
+		const request = new IncomingRequest("http://example.com");
 		// Create an empty context to pass to `worker.fetch()`.
 		const ctx = createExecutionContext();
 		const response = await worker.fetch(request, env, ctx);
@@ -64,7 +72,7 @@ describe('test fetch', () => {
 		await waitOnExecutionContext(ctx);
 		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
 
-		expect(sendSpySlack).toBeCalledTimes(1)
+		expect(sendSpySlack).toBeCalledTimes(1);
 		expect(sendSpySlack).toBeCalledWith({
 			type: "chat.postMessage",
 			body: {
@@ -98,11 +106,12 @@ describe('test fetch', () => {
 			},
 		});
 
-		expect(sendSpyDiscord).toBeCalledTimes(1)
+		expect(sendSpyDiscord).toBeCalledTimes(1);
 		expect(sendSpyDiscord).toBeCalledWith({
 			type: "send_message",
 			message: {
-				content: "# CHANNEL_TITLE\n## item_title_1\nhttp://example.com/chanel/items/1\n## item_title_2\nhttp://example.com/chanel/items/2\n",
+				content:
+					"# CHANNEL_TITLE\n## item_title_1\nhttp://example.com/chanel/items/1\n## item_title_2\nhttp://example.com/chanel/items/2\n",
 			},
 		});
 
@@ -112,23 +121,25 @@ describe('test fetch', () => {
 		expect(v).toBe("http://example.com/chanel/items/1");
 	});
 
-	it('responds with Hello World! (integration style)', async () => {
+	it("responds with Hello World! (integration style)", async () => {
 		const sendSpySlack = vi
-		.spyOn(env.SLACK_NOTIFIER, "send")
-		.mockImplementation(async () => {});
+			.spyOn(env.SLACK_NOTIFIER, "send")
+			.mockImplementation(async () => {});
 
 		const sendSpyDiscord = vi
-		.spyOn(env.DQUEUE, "send")
-		.mockImplementation(async () => {});
+			.spyOn(env.DQUEUE, "send")
+			.mockImplementation(async () => {});
 
-		await env.rss.put('http://example.com', '');
+		await env.rss.put("http://example.com", "");
 		fetchMock
 			.get("http://example.com")
 			.intercept({
 				path: "/",
 				method: "GET",
 			})
-			.reply(200, `<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+			.reply(
+				200,
+				`<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
 						<channel>
 							<title>CHANNEL_TITLE</title>
 							<link>http://example.com/chanel2</link>
@@ -145,22 +156,26 @@ describe('test fetch', () => {
 							<dc:date>2024-12-26T15:00:00Z</dc:date>
 						</item>
 					</rdf:RDF>`,
-				)
-				.times(2);
+			)
+			.times(2);
 
 		// 1
-		const response = await SELF.fetch('https://example.com');
+		const response = await SELF.fetch("https://example.com");
 		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
 
-		expect(await env.rss.get("http://example.com")).toBe("http://example.com/chanel2/items/1");
-		
-		// 2
-		const response2 = await SELF.fetch('https://example.com');
-		expect(await response2.text()).toMatchInlineSnapshot(`"Hello World!"`);
-		
-		expect(await env.rss.get("http://example.com")).toBe("http://example.com/chanel2/items/1");
+		expect(await env.rss.get("http://example.com")).toBe(
+			"http://example.com/chanel2/items/1",
+		);
 
-		expect(sendSpySlack).toBeCalledTimes(1)
-		expect(sendSpyDiscord).toBeCalledTimes(1)
+		// 2
+		const response2 = await SELF.fetch("https://example.com");
+		expect(await response2.text()).toMatchInlineSnapshot(`"Hello World!"`);
+
+		expect(await env.rss.get("http://example.com")).toBe(
+			"http://example.com/chanel2/items/1",
+		);
+
+		expect(sendSpySlack).toBeCalledTimes(1);
+		expect(sendSpyDiscord).toBeCalledTimes(1);
 	});
 });
