@@ -13,7 +13,7 @@ export default {
 
 async function rssHandler(env: Env){
 	const keys = (await env.rss.list()).keys
-	console.info(keys)
+	console.info("keys", keys);
 
 	for (const { name:rssURL } of keys) {
 		const allow = await isAllowByRobots(rssURL);
@@ -40,7 +40,7 @@ async function rssHandler(env: Env){
 			}
 			uncheckedRssItems.push(item);
 		}
-		console.info(uncheckedRssItems);
+		console.info("New items", uncheckedRssItems.length);
 		if (uncheckedRssItems.length === 0) {
 			console.info("No new items");
 			continue;

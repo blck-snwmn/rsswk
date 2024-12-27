@@ -4,6 +4,11 @@ export default defineWorkersConfig({
 	test: {
 		poolOptions: {
 			workers: {
+				miniflare:{
+					bindings:{
+						CHANNEL: "TEST_CHANNEL",
+					}
+				},
 				wrangler: { configPath: './wrangler.toml' },
 			},
 		},
