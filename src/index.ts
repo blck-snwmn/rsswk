@@ -47,6 +47,7 @@ async function rssHandler(env: Env) {
 		}
 
 		await env.rss.put(rssURL, latestItem ?? "");
+		console.info("Put latest item", latestItem);
 
 		const slackMessage = createSlackMessage(
 			env.CHANNEL,
@@ -55,6 +56,7 @@ async function rssHandler(env: Env) {
 		);
 
 		await env.SLACK_NOTIFIER.send(slackMessage);
+		console.info("Send slack message");
 
 		const discordMessage = createDiscordMessage(
 			rss.channel.title,
@@ -62,6 +64,7 @@ async function rssHandler(env: Env) {
 		);
 
 		await env.DQUEUE.send(discordMessage);
+		console.info("Send discord message");
 	}
 }
 
