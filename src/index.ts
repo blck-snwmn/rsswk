@@ -50,22 +50,7 @@ async function rssHandler(env: Env) {
 		await env.rss.put(rssURL, latestItem ?? "");
 		console.info("Put latest item", latestItem);
 
-		const slackMessage = createSlackMessage(
-			env.CHANNEL,
-			rss.channel.title,
-			uncheckedRssItems,
-		);
-
-		await env.SLACK_NOTIFIER.send(slackMessage);
-		console.info("Send slack message");
-
-		const discordMessage = createDiscordMessage(
-			rss.channel.title,
-			uncheckedRssItems,
-		);
-
-		await env.DQUEUE.send(discordMessage);
-		console.info("Send discord message");
+		await sendNotifications(env, rss.channel.title, uncheckedRssItems);
 	}
 }
 
@@ -121,6 +106,16 @@ export function createDiscordMessage(title: string, items: XMLItem[]) {
 			content: message,
 		},
 	};
+}
+
+async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
+	const slackMessage = createSlackMessage(env.CHANNEL, title, items);
+	await env.SLACK_NOTIFIER.send(slackMessage);
+	console.info("Send slack message");
+
+	const discordMessage = createDiscordMessage(title, items);
+	await env.DQUEUE.send(discordMessage);
+	console.info("Send discord message");
 }
 
 type XMLContemt = {
