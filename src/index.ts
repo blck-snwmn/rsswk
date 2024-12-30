@@ -30,7 +30,8 @@ async function rssHandler(env: Env) {
 
 		const rssItems = rss.item;
 		const uncheckedRssItems = [];
-		let latestItem = lastItem;
+
+		let latestItem: string | null = null;
 		for (const item of rssItems) {
 			if (item.link === lastItem) {
 				break;
