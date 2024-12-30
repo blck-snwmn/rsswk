@@ -28,26 +28,16 @@ async function rssHandler(env: Env) {
 		const rss = await fetchRSS(rssURL);
 		console.info(rss.channel.title);
 
-		const rssItems = rss.item;
-		const uncheckedRssItems = [];
-
-		let latestItem: string | null = null;
-		for (const item of rssItems) {
-			if (item.link === lastItem) {
-				break;
-			}
-			if (!latestItem) {
-				latestItem = item.link;
-			}
-			uncheckedRssItems.push(item);
-		}
+		const uncheckedRssItems = getUncheckedRssItems(rss.item, lastItem);
 		console.info("New items", uncheckedRssItems.length);
+
 		if (uncheckedRssItems.length === 0) {
 			console.info("No new items");
 			continue;
 		}
 
-		await env.rss.put(rssURL, latestItem ?? "");
+		const latestItem = uncheckedRssItems[0].link;
+		await env.rss.put(rssURL, latestItem);
 		console.info("Put latest item", latestItem);
 
 		await sendNotifications(env, rss.channel.title, uncheckedRssItems);
@@ -61,6 +51,18 @@ async function fetchRSS(url: string) {
 	});
 	const xml: XMLContemt = parser.parse(text);
 	return xml.RDF;
+}
+
+function getUncheckedRssItems(
+	rssItems: XMLItem[],
+	lastItem: string,
+): XMLItem[] {
+	const uncheckedRssItems = [];
+	for (const item of rssItems) {
+		if (item.link === lastItem) break;
+		uncheckedRssItems.push(item);
+	}
+	return uncheckedRssItems;
 }
 
 function createSlackMessage(channel: string, title: string, items: XMLItem[]) {
