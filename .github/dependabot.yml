@@ -10,7 +10,7 @@ updates:
       dependencies:
         patterns:
           - "*"
-    allow:
+    ignore:
       - dependency-name: "vitest"
         versions: [ "2.*.*"]
   - package-ecosystem: "github-actions"
