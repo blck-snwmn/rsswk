@@ -97,13 +97,18 @@ function createSlackMessage(channel: string, title: string, items: XMLItem[]) {
 	};
 }
 
-export function createDiscordMessage(title: string, items: XMLItem[]) {
+export function createDiscordMessage(
+	channel: string,
+	title: string,
+	items: XMLItem[],
+) {
 	let message = `# ${title}\n`;
 	for (const item of items) {
 		message += `## ${item.title}\n${item.link}\n`;
 	}
 	return {
 		type: "send_message",
+		channelId: channel,
 		message: {
 			content: message,
 		},
@@ -115,7 +120,11 @@ async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
 	await env.SLACK_NOTIFIER.send(slackMessage);
 	console.info("Send slack message");
 
-	const discordMessage = createDiscordMessage(title, items);
+	const discordMessage = createDiscordMessage(
+		env.DISCORD_CHANNEL_DEV,
+		title,
+		items,
+	);
 	await env.DQUEUE.send(discordMessage);
 	console.info("Send discord message");
 }
