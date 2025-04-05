@@ -348,40 +348,79 @@ describe("test fetch", () => {
 		// Verify that multiple messages were sent to Discord due to content length
 		expect(sendSpyDiscord.mock.calls.length).toBeGreaterThan(1);
 		
-		// Check the format of each message
-		for (const call of sendSpyDiscord.mock.calls) {
-			const message = call[0] as { 
-				type: string; 
-				message: { 
-					content: string 
-				}
-			};
-			
-			// Verify message structure
-			expect(message).toHaveProperty("type", "send_message");
-			expect(message).toHaveProperty("message");
-			expect(message.message).toHaveProperty("content");
-			
-			// Verify content starts with the channel title
-			expect(message.message.content).toContain("# VERY_LONG_CHANNEL_TITLE");
-			
-			// Verify message is within Discord's limit
-			expect(message.message.content.length).toBeLessThanOrEqual(2000);
-		}
+		// Check the format of each message and proper content distribution
+		const messages = sendSpyDiscord.mock.calls.map(call => 
+			(call[0] as { type: string; message: { content: string } })
+		);
 		
-		// Verify that all items are included across all messages
-		const allContent = sendSpyDiscord.mock.calls
-			.map(call => (call[0] as { message: { content: string } }).message.content)
-			.join("");
-			
-		// Check specific items from the beginning, middle, and end to ensure all content is included
-		expect(allContent).toContain("http://example.com/chanel/items/1");
-		expect(allContent).toContain("http://example.com/chanel/items/5");
-		expect(allContent).toContain("http://example.com/chanel/items/10");
-		expect(allContent).toContain("http://example.com/chanel/items/15");
-		expect(allContent).toContain("http://example.com/chanel/items/20");
-		expect(allContent).toContain("Long item title 1 with extra text");
-		expect(allContent).toContain("Long item title 10 with extra text");
-		expect(allContent).toContain("Long item title 20 with extra text");
+		// Log message contents for debugging only
+		console.log(`Number of messages: ${messages.length}`);
+		
+		// Based on our test data, we know there should be exactly 2 messages
+		expect(messages.length).toBe(2);
+		
+		// Create expected message structure for first message
+		const expectedMessage1 = {
+			type: "send_message",
+			message: {
+				content: "# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
+					"## Long item title 1 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/1\n" +
+					"## Long item title 2 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/2\n" +
+					"## Long item title 3 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/3\n" +
+					"## Long item title 4 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/4\n" +
+					"## Long item title 5 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/5\n" +
+					"## Long item title 6 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/6\n" +
+					"## Long item title 7 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/7\n" +
+					"## Long item title 8 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/8\n" +
+					"## Long item title 9 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/9\n" +
+					"## Long item title 10 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/10\n" +
+					"## Long item title 11 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/11\n" +
+					"## Long item title 12 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/12\n"
+			}
+		};
+		
+		// Create expected message structure for second message
+		const expectedMessage2 = {
+			type: "send_message",
+			message: {
+				content: "# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
+					"## Long item title 13 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/13\n" +
+					"## Long item title 14 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/14\n" +
+					"## Long item title 15 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/15\n" +
+					"## Long item title 16 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/16\n" +
+					"## Long item title 17 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/17\n" +
+					"## Long item title 18 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/18\n" +
+					"## Long item title 19 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/19\n" +
+					"## Long item title 20 with extra text to make it longer and consume more characters in the final message format\n" +
+					"http://example.com/chanel/items/20\n"
+			}
+		};
+		
+		// Compare actual messages with expected ones
+		expect(messages[0]).toEqual(expectedMessage1);
+		expect(messages[1]).toEqual(expectedMessage2);
+		
+		// Verify both messages are within Discord's limit
+		expect(messages[0].message.content.length).toBeLessThanOrEqual(2000);
+		expect(messages[1].message.content.length).toBeLessThanOrEqual(2000);
 	});
 });
