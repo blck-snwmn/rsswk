@@ -344,26 +344,27 @@ describe("test fetch", () => {
 		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
 
 		expect(sendSpySlack).toBeCalledTimes(1);
-		
+
 		// Verify that multiple messages were sent to Discord due to content length
 		expect(sendSpyDiscord.mock.calls.length).toBeGreaterThan(1);
-		
+
 		// Check the format of each message and proper content distribution
-		const messages = sendSpyDiscord.mock.calls.map(call => 
-			(call[0] as { type: string; message: { content: string } })
+		const messages = sendSpyDiscord.mock.calls.map(
+			(call) => call[0] as { type: string; message: { content: string } },
 		);
-		
+
 		// Log message contents for debugging only
 		console.log(`Number of messages: ${messages.length}`);
-		
+
 		// Based on our test data, we know there should be exactly 2 messages
 		expect(messages.length).toBe(2);
-		
+
 		// Create expected message structure for first message
 		const expectedMessage1 = {
 			type: "send_message",
 			message: {
-				content: "# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
+				content:
+					"# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
 					"## Long item title 1 with extra text to make it longer and consume more characters in the final message format\n" +
 					"http://example.com/chanel/items/1\n" +
 					"## Long item title 2 with extra text to make it longer and consume more characters in the final message format\n" +
@@ -387,15 +388,16 @@ describe("test fetch", () => {
 					"## Long item title 11 with extra text to make it longer and consume more characters in the final message format\n" +
 					"http://example.com/chanel/items/11\n" +
 					"## Long item title 12 with extra text to make it longer and consume more characters in the final message format\n" +
-					"http://example.com/chanel/items/12\n"
-			}
+					"http://example.com/chanel/items/12\n",
+			},
 		};
-		
+
 		// Create expected message structure for second message
 		const expectedMessage2 = {
 			type: "send_message",
 			message: {
-				content: "# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
+				content:
+					"# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
 					"## Long item title 13 with extra text to make it longer and consume more characters in the final message format\n" +
 					"http://example.com/chanel/items/13\n" +
 					"## Long item title 14 with extra text to make it longer and consume more characters in the final message format\n" +
@@ -411,14 +413,14 @@ describe("test fetch", () => {
 					"## Long item title 19 with extra text to make it longer and consume more characters in the final message format\n" +
 					"http://example.com/chanel/items/19\n" +
 					"## Long item title 20 with extra text to make it longer and consume more characters in the final message format\n" +
-					"http://example.com/chanel/items/20\n"
-			}
+					"http://example.com/chanel/items/20\n",
+			},
 		};
-		
+
 		// Compare actual messages with expected ones
 		expect(messages[0]).toEqual(expectedMessage1);
 		expect(messages[1]).toEqual(expectedMessage2);
-		
+
 		// Verify both messages are within Discord's limit
 		expect(messages[0].message.content.length).toBeLessThanOrEqual(2000);
 		expect(messages[1].message.content.length).toBeLessThanOrEqual(2000);
