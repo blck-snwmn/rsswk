@@ -106,13 +106,44 @@ export function createDiscordMessage(
 	for (const item of items) {
 		message += `## ${item.title}\n${item.link}\n`;
 	}
+	
 	return {
 		type: "send_message",
-		channelId: channel,
 		message: {
 			content: message,
 		},
 	};
+}
+
+// Split items into groups that fit within Discord's message limit
+function groupItemsBySize(title: string, items: XMLItem[], maxLength = 1900): XMLItem[][] {
+	const titleHeader = `# ${title}\n`;
+	const groups: XMLItem[][] = [];
+	let currentGroup: XMLItem[] = [];
+	let currentSize = titleHeader.length;
+	
+	for (const item of items) {
+		// Calculate size of this item
+		const itemText = `## ${item.title}\n${item.link}\n`;
+		
+		// If adding this item would exceed the limit, start a new group
+		if (currentSize + itemText.length > maxLength && currentGroup.length > 0) {
+			groups.push(currentGroup);
+			currentGroup = [];
+			currentSize = titleHeader.length;
+		}
+		
+		// Add item to current group
+		currentGroup.push(item);
+		currentSize += itemText.length;
+	}
+	
+	// Add the last group if it's not empty
+	if (currentGroup.length > 0) {
+		groups.push(currentGroup);
+	}
+	
+	return groups;
 }
 
 async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
@@ -120,13 +151,20 @@ async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
 	await env.SLACK_NOTIFIER.send(slackMessage);
 	console.info("Send slack message");
 
-	const discordMessage = createDiscordMessage(
-		env.DISCORD_CHANNEL_DEV,
-		title,
-		items,
-	);
-	await env.DQUEUE.send(discordMessage);
-	console.info("Send discord message");
+	// Split items into groups that fit within Discord's message limit
+	const itemGroups = groupItemsBySize(title, items);
+	
+	// Send all messages using createDiscordMessage with the same format
+	for (const group of itemGroups) {
+		const discordMessage = createDiscordMessage(
+			env.DISCORD_CHANNEL_DEV,
+			title,
+			group
+		);
+		await env.DQUEUE.send(discordMessage);
+	}
+	
+	console.info("Send discord messages");
 }
 
 type XMLContemt = {
