@@ -109,6 +109,7 @@ export function createDiscordMessage(
 
 	return {
 		type: "send_message",
+		channelId: channel,
 		message: {
 			content: message,
 		},

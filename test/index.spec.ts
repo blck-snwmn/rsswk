@@ -29,11 +29,11 @@ describe("test fetch", () => {
 	it("call once", async () => {
 		const sendSpySlack = vi
 			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => {});
+			.mockImplementation(async () => { });
 
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => {});
+			.mockImplementation(async () => { });
 
 		await env.rss.put("http://example.com", "");
 
@@ -109,6 +109,7 @@ describe("test fetch", () => {
 		expect(sendSpyDiscord).toBeCalledTimes(1);
 		expect(sendSpyDiscord).toBeCalledWith({
 			type: "send_message",
+			channelId: env.DISCORD_CHANNEL_DEV,
 			message: {
 				content:
 					"# CHANNEL_TITLE\n## item_title_1\nhttp://example.com/chanel/items/1\n## item_title_2\nhttp://example.com/chanel/items/2\n",
@@ -124,11 +125,11 @@ describe("test fetch", () => {
 	it("responds with Hello World! (integration style)", async () => {
 		const sendSpySlack = vi
 			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => {});
+			.mockImplementation(async () => { });
 
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => {});
+			.mockImplementation(async () => { });
 
 		// 1
 		await env.rss.put("http://example.com", "");
@@ -207,16 +208,23 @@ describe("test fetch", () => {
 
 		expect(sendSpySlack).toBeCalledTimes(2);
 		expect(sendSpyDiscord).toBeCalledTimes(2);
+
+		// Verify that channelId is included in Discord messages
+		for (const call of sendSpyDiscord.mock.calls) {
+			const discordCall = call[0] as { type: string, channelId: string, message: { content: string } };
+			expect(discordCall).toHaveProperty('channelId');
+			expect(discordCall.channelId).toBe(env.DISCORD_CHANNEL_DEV);
+		}
 	});
 
 	it("splits long messages for Discord", async () => {
 		const sendSpySlack = vi
 			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => {});
+			.mockImplementation(async () => { });
 
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => {});
+			.mockImplementation(async () => { });
 
 		await env.rss.put("http://example.com", "");
 
@@ -362,6 +370,7 @@ describe("test fetch", () => {
 		// Create expected message structure for first message
 		const expectedMessage1 = {
 			type: "send_message",
+			channelId: env.DISCORD_CHANNEL_DEV,
 			message: {
 				content:
 					"# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
@@ -395,6 +404,7 @@ describe("test fetch", () => {
 		// Create expected message structure for second message
 		const expectedMessage2 = {
 			type: "send_message",
+			channelId: env.DISCORD_CHANNEL_DEV,
 			message: {
 				content:
 					"# VERY_LONG_CHANNEL_TITLE_FOR_TESTING_MESSAGE_SPLITTING\n" +
