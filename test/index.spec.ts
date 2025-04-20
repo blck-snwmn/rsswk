@@ -29,11 +29,11 @@ describe("test fetch", () => {
 	it("call once", async () => {
 		const sendSpySlack = vi
 			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => { });
+			.mockImplementation(async () => {});
 
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => { });
+			.mockImplementation(async () => {});
 
 		await env.rss.put("http://example.com", "");
 
@@ -125,11 +125,11 @@ describe("test fetch", () => {
 	it("responds with Hello World! (integration style)", async () => {
 		const sendSpySlack = vi
 			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => { });
+			.mockImplementation(async () => {});
 
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => { });
+			.mockImplementation(async () => {});
 
 		// 1
 		await env.rss.put("http://example.com", "");
@@ -211,8 +211,12 @@ describe("test fetch", () => {
 
 		// Verify that channelId is included in Discord messages
 		for (const call of sendSpyDiscord.mock.calls) {
-			const discordCall = call[0] as { type: string, channelId: string, message: { content: string } };
-			expect(discordCall).toHaveProperty('channelId');
+			const discordCall = call[0] as {
+				type: string;
+				channelId: string;
+				message: { content: string };
+			};
+			expect(discordCall).toHaveProperty("channelId");
 			expect(discordCall.channelId).toBe(env.DISCORD_CHANNEL_DEV);
 		}
 	});
@@ -220,11 +224,11 @@ describe("test fetch", () => {
 	it("splits long messages for Discord", async () => {
 		const sendSpySlack = vi
 			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => { });
+			.mockImplementation(async () => {});
 
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => { });
+			.mockImplementation(async () => {});
 
 		await env.rss.put("http://example.com", "");
 
