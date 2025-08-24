@@ -1,9 +1,9 @@
 // test/index.spec.ts
 import {
-	SELF,
 	createExecutionContext,
 	env,
 	fetchMock,
+	SELF,
 	waitOnExecutionContext,
 } from "cloudflare:test";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";

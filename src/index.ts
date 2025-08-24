@@ -2,11 +2,11 @@ import { XMLParser } from "fast-xml-parser";
 import robotsParser from "robots-parser";
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
+	async fetch(_request, env, _ctx): Promise<Response> {
 		await rssHandler(env);
 		return new Response("Hello World!");
 	},
-	async scheduled(controller: ScheduledController, env: Env): Promise<void> {
+	async scheduled(_controller: ScheduledController, env: Env): Promise<void> {
 		await rssHandler(env);
 	},
 } satisfies ExportedHandler<Env>;
