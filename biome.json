@@ -3,13 +3,20 @@
 	"files": {
 		"includes": [
 			"**",
+			"!renovate.json",
 			"!**/node_modules/**/*",
 			"!**/*/build/**/*",
 			"!**/*/.wrangler/**/*",
 			"!**/graphql/src/gql/**/*"
 		]
 	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
