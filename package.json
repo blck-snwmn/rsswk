@@ -12,7 +12,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.3.14",
 		"@cloudflare/vitest-pool-workers": "0.12.10",
-		"@cloudflare/workers-types": "4.20260122.0",
+		"@cloudflare/workers-types": "4.20260212.0",
 		"typescript": "5.9.3",
 		"vitest": "3.2.4",
 		"wrangler": "4.59.3"
