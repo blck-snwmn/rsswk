@@ -53,10 +53,7 @@ async function fetchRSS(url: string) {
 	return xml.RDF;
 }
 
-function getUncheckedRssItems(
-	rssItems: XMLItem[],
-	lastItem: string,
-): XMLItem[] {
+function getUncheckedRssItems(rssItems: XMLItem[], lastItem: string): XMLItem[] {
 	const uncheckedRssItems = [];
 	for (const item of rssItems) {
 		if (item.link === lastItem) break;
@@ -97,11 +94,7 @@ function createSlackMessage(channel: string, title: string, items: XMLItem[]) {
 	};
 }
 
-export function createDiscordMessage(
-	channel: string,
-	title: string,
-	items: XMLItem[],
-) {
+export function createDiscordMessage(channel: string, title: string, items: XMLItem[]) {
 	let message = `# ${title}\n`;
 	for (const item of items) {
 		message += `## ${item.title}\n${item.link}\n`;
@@ -117,11 +110,7 @@ export function createDiscordMessage(
 }
 
 // Split items into groups that fit within Discord's message limit
-function groupItemsBySize(
-	title: string,
-	items: XMLItem[],
-	maxLength = 1900,
-): XMLItem[][] {
+function groupItemsBySize(title: string, items: XMLItem[], maxLength = 1900): XMLItem[][] {
 	const titleHeader = `# ${title}\n`;
 	const groups: XMLItem[][] = [];
 	let currentGroup: XMLItem[] = [];
@@ -161,11 +150,7 @@ async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
 
 	// Send all messages using createDiscordMessage with the same format
 	for (const group of itemGroups) {
-		const discordMessage = createDiscordMessage(
-			env.DISCORD_CHANNEL_DEV,
-			title,
-			group,
-		);
+		const discordMessage = createDiscordMessage(env.DISCORD_CHANNEL_DEV, title, group);
 		await env.DQUEUE.send(discordMessage);
 	}
 

@@ -27,13 +27,9 @@ afterEach(() => {
 
 describe("test fetch", () => {
 	it("call once", async () => {
-		const sendSpySlack = vi
-			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => {});
+		const sendSpySlack = vi.spyOn(env.SLACK_NOTIFIER, "send").mockImplementation(async () => {});
 
-		const sendSpyDiscord = vi
-			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => {});
+		const sendSpyDiscord = vi.spyOn(env.DQUEUE, "send").mockImplementation(async () => {});
 
 		await env.rss.put("http://example.com", "");
 
@@ -123,13 +119,9 @@ describe("test fetch", () => {
 	});
 
 	it("responds with Hello World! (integration style)", async () => {
-		const sendSpySlack = vi
-			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => {});
+		const sendSpySlack = vi.spyOn(env.SLACK_NOTIFIER, "send").mockImplementation(async () => {});
 
-		const sendSpyDiscord = vi
-			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => {});
+		const sendSpyDiscord = vi.spyOn(env.DQUEUE, "send").mockImplementation(async () => {});
 
 		// 1
 		await env.rss.put("http://example.com", "");
@@ -163,9 +155,7 @@ describe("test fetch", () => {
 		const response = await SELF.fetch("https://example.com");
 		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
 
-		expect(await env.rss.get("http://example.com")).toBe(
-			"http://example.com/chanel2/items/1",
-		);
+		expect(await env.rss.get("http://example.com")).toBe("http://example.com/chanel2/items/1");
 
 		// 2
 		fetchMock
@@ -202,9 +192,7 @@ describe("test fetch", () => {
 		const response2 = await SELF.fetch("https://example.com");
 		expect(await response2.text()).toMatchInlineSnapshot(`"Hello World!"`);
 
-		expect(await env.rss.get("http://example.com")).toBe(
-			"http://example.com/chanel2/items/12",
-		);
+		expect(await env.rss.get("http://example.com")).toBe("http://example.com/chanel2/items/12");
 
 		expect(sendSpySlack).toBeCalledTimes(2);
 		expect(sendSpyDiscord).toBeCalledTimes(2);
@@ -222,13 +210,9 @@ describe("test fetch", () => {
 	});
 
 	it("splits long messages for Discord", async () => {
-		const sendSpySlack = vi
-			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => {});
+		const sendSpySlack = vi.spyOn(env.SLACK_NOTIFIER, "send").mockImplementation(async () => {});
 
-		const sendSpyDiscord = vi
-			.spyOn(env.DQUEUE, "send")
-			.mockImplementation(async () => {});
+		const sendSpyDiscord = vi.spyOn(env.DQUEUE, "send").mockImplementation(async () => {});
 
 		await env.rss.put("http://example.com", "");
 
