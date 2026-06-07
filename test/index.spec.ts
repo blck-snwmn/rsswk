@@ -1,17 +1,18 @@
 // test/index.spec.ts
 import {
 	createExecutionContext,
-	env,
-	fetchMock,
+	env as providedEnv,
 	SELF,
 	waitOnExecutionContext,
 } from "cloudflare:test";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { fetchMock } from "./fetch-mock";
 import worker from "../src/index";
 
 // For now, you'll need to do something like this to get a correctly-typed
 // `Request` to pass to `worker.fetch()`.
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
+const env = providedEnv as Env;
 
 beforeAll(() => {
 	// Enable outbound request mocking...
