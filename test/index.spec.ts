@@ -12,6 +12,7 @@ import worker from "../src/index";
 // For now, you'll need to do something like this to get a correctly-typed
 // `Request` to pass to `worker.fetch()`.
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
+const queueSendResponse = {} as QueueSendResponse;
 
 beforeAll(() => {
 	// Enable outbound request mocking...
@@ -27,9 +28,13 @@ afterEach(() => {
 
 describe("test fetch", () => {
 	it("call once", async () => {
-		const sendSpySlack = vi.spyOn(env.SLACK_NOTIFIER, "send").mockImplementation(async () => {});
+		const sendSpySlack = vi
+			.spyOn(env.SLACK_NOTIFIER, "send")
+			.mockImplementation(async () => queueSendResponse);
 
-		const sendSpyDiscord = vi.spyOn(env.DQUEUE, "send").mockImplementation(async () => {});
+		const sendSpyDiscord = vi
+			.spyOn(env.DQUEUE, "send")
+			.mockImplementation(async () => queueSendResponse);
 
 		await env.rss.put("http://example.com", "");
 
@@ -119,9 +124,13 @@ describe("test fetch", () => {
 	});
 
 	it("responds with Hello World! (integration style)", async () => {
-		const sendSpySlack = vi.spyOn(env.SLACK_NOTIFIER, "send").mockImplementation(async () => {});
+		const sendSpySlack = vi
+			.spyOn(env.SLACK_NOTIFIER, "send")
+			.mockImplementation(async () => queueSendResponse);
 
-		const sendSpyDiscord = vi.spyOn(env.DQUEUE, "send").mockImplementation(async () => {});
+		const sendSpyDiscord = vi
+			.spyOn(env.DQUEUE, "send")
+			.mockImplementation(async () => queueSendResponse);
 
 		// 1
 		await env.rss.put("http://example.com", "");
@@ -210,9 +219,13 @@ describe("test fetch", () => {
 	});
 
 	it("splits long messages for Discord", async () => {
-		const sendSpySlack = vi.spyOn(env.SLACK_NOTIFIER, "send").mockImplementation(async () => {});
+		const sendSpySlack = vi
+			.spyOn(env.SLACK_NOTIFIER, "send")
+			.mockImplementation(async () => queueSendResponse);
 
-		const sendSpyDiscord = vi.spyOn(env.DQUEUE, "send").mockImplementation(async () => {});
+		const sendSpyDiscord = vi
+			.spyOn(env.DQUEUE, "send")
+			.mockImplementation(async () => queueSendResponse);
 
 		await env.rss.put("http://example.com", "");
 
