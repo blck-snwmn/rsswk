@@ -16,7 +16,7 @@
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "0.12.21",
 		"@cloudflare/workers-types": "4.20260608.1",
-		"oxfmt": "0.48.0",
+		"oxfmt": "0.53.0",
 		"oxlint": "1.63.0",
 		"oxlint-tsgolint": "0.22.1",
 		"typescript": "5.9.3",
