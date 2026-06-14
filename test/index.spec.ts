@@ -1,13 +1,8 @@
 // test/index.spec.ts
-import {
-	createExecutionContext,
-	env,
-	fetchMock,
-	SELF,
-	waitOnExecutionContext,
-} from "cloudflare:test";
+import { createExecutionContext, env, SELF, waitOnExecutionContext } from "cloudflare:test";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import worker from "../src/index";
+import { fetchMock } from "./fetch-mock";
 
 // For now, you'll need to do something like this to get a correctly-typed
 // `Request` to pass to `worker.fetch()`.
@@ -15,10 +10,7 @@ const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
 const queueSendResponse = {} as QueueSendResponse;
 
 beforeAll(() => {
-	// Enable outbound request mocking...
 	fetchMock.activate();
-	// ...and throw errors if an outbound request isn't mocked
-	fetchMock.disableNetConnect();
 });
 
 afterEach(() => {
@@ -359,7 +351,7 @@ describe("test fetch", () => {
 
 		// Check the format of each message and proper content distribution
 		const messages = sendSpyDiscord.mock.calls.map(
-			(call) => call[0] as { type: string; message: { content: string } },
+			(call: unknown[]) => call[0] as { type: string; message: { content: string } },
 		);
 
 		// Log message contents for debugging only
