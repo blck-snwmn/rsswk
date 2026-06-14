@@ -1,16 +1,18 @@
-import { defineWorkersConfig } from "@cloudflare/vitest-pool-workers/config";
+import { cloudflareTest } from "@cloudflare/vitest-pool-workers";
+import { defineConfig } from "vitest/config";
 
-export default defineWorkersConfig({
-	test: {
-		poolOptions: {
-			workers: {
-				miniflare: {
-					bindings: {
-						CHANNEL: "TEST_CHANNEL",
-					},
+export default defineConfig({
+	plugins: [
+		cloudflareTest({
+			remoteBindings: false,
+			miniflare: {
+				bindings: {
+					CHANNEL: "TEST_CHANNEL",
 				},
-				wrangler: { configPath: "./wrangler.toml" },
 			},
-		},
+			wrangler: { configPath: "./wrangler.toml" },
+		}),
+	],
+	test: {
 	},
 });
