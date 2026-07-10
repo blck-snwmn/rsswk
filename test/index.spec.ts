@@ -20,10 +20,6 @@ afterEach(() => {
 
 describe("test fetch", () => {
 	it("call once", async () => {
-		const sendSpySlack = vi
-			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => queueSendResponse);
-
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
 			.mockImplementation(async () => queueSendResponse);
@@ -65,40 +61,6 @@ describe("test fetch", () => {
 		await waitOnExecutionContext(ctx);
 		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
 
-		expect(sendSpySlack).toBeCalledTimes(1);
-		expect(sendSpySlack).toBeCalledWith({
-			type: "chat.postMessage",
-			body: {
-				channel: "TEST_CHANNEL",
-				blocks: [
-					{
-						type: "header",
-						text: {
-							type: "plain_text",
-							text: "CHANNEL_TITLE",
-						},
-					},
-					{
-						type: "divider",
-					},
-					{
-						type: "section",
-						text: {
-							type: "mrkdwn",
-							text: "*item_title_1*\nhttp://example.com/chanel/items/1",
-						},
-					},
-					{
-						type: "section",
-						text: {
-							type: "mrkdwn",
-							text: "*item_title_2*\nhttp://example.com/chanel/items/2",
-						},
-					},
-				],
-			},
-		});
-
 		expect(sendSpyDiscord).toBeCalledTimes(1);
 		expect(sendSpyDiscord).toBeCalledWith({
 			type: "send_message",
@@ -116,10 +78,6 @@ describe("test fetch", () => {
 	});
 
 	it("responds with Hello World! (integration style)", async () => {
-		const sendSpySlack = vi
-			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => queueSendResponse);
-
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
 			.mockImplementation(async () => queueSendResponse);
@@ -195,7 +153,6 @@ describe("test fetch", () => {
 
 		expect(await env.rss.get("http://example.com")).toBe("http://example.com/chanel2/items/12");
 
-		expect(sendSpySlack).toBeCalledTimes(2);
 		expect(sendSpyDiscord).toBeCalledTimes(2);
 
 		// Verify that channelId is included in Discord messages
@@ -211,10 +168,6 @@ describe("test fetch", () => {
 	});
 
 	it("splits long messages for Discord", async () => {
-		const sendSpySlack = vi
-			.spyOn(env.SLACK_NOTIFIER, "send")
-			.mockImplementation(async () => queueSendResponse);
-
 		const sendSpyDiscord = vi
 			.spyOn(env.DQUEUE, "send")
 			.mockImplementation(async () => queueSendResponse);
@@ -343,8 +296,6 @@ describe("test fetch", () => {
 		const response = await worker.fetch(request, env, ctx);
 		await waitOnExecutionContext(ctx);
 		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
-
-		expect(sendSpySlack).toBeCalledTimes(1);
 
 		// Verify that multiple messages were sent to Discord due to content length
 		expect(sendSpyDiscord.mock.calls.length).toBeGreaterThan(1);

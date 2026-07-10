@@ -14,11 +14,10 @@ $ pnpm run deploy
 $ pnpm wrangler kv namespace create rss
 ```
 
-Set `CHANNEL` and `DISCORD_CHANNEL_DEV` in `[vars]` in `wrangler.toml`.
+Set `DISCORD_CHANNEL_DEV` in `[vars]` in `wrangler.toml`.
 
 ### queue
 see: 
-- https://github.com/blck-snwmn/slackworker
 - https://github.com/blck-snwmn/discordworker
 
 ## Development

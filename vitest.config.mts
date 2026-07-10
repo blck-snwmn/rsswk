@@ -5,11 +5,6 @@ export default defineConfig({
 	plugins: [
 		cloudflareTest({
 			remoteBindings: false,
-			miniflare: {
-				bindings: {
-					CHANNEL: "TEST_CHANNEL",
-				},
-			},
 			wrangler: { configPath: "./wrangler.toml" },
 		}),
 	],

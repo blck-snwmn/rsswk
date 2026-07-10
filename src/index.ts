@@ -62,38 +62,6 @@ function getUncheckedRssItems(rssItems: XMLItem[], lastItem: string): XMLItem[] 
 	return uncheckedRssItems;
 }
 
-function createSlackMessage(channel: string, title: string, items: XMLItem[]) {
-	const blocks = [];
-	for (const item of items) {
-		blocks.push({
-			type: "section",
-			text: {
-				type: "mrkdwn",
-				text: `*${item.title}*\n${item.link}`,
-			},
-		});
-	}
-	return {
-		type: "chat.postMessage",
-		body: {
-			channel: channel,
-			blocks: [
-				{
-					type: "header",
-					text: {
-						type: "plain_text",
-						text: title,
-					},
-				},
-				{
-					type: "divider",
-				},
-				...blocks,
-			],
-		},
-	};
-}
-
 export function createDiscordMessage(channel: string, title: string, items: XMLItem[]) {
 	let message = `# ${title}\n`;
 	for (const item of items) {
@@ -141,10 +109,6 @@ function groupItemsBySize(title: string, items: XMLItem[], maxLength = 1900): XM
 }
 
 async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
-	const slackMessage = createSlackMessage(env.CHANNEL, title, items);
-	await env.SLACK_NOTIFIER.send(slackMessage);
-	console.info("Send slack message");
-
 	// Split items into groups that fit within Discord's message limit
 	const itemGroups = groupItemsBySize(title, items);
 
