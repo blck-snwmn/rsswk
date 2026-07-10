@@ -9,6 +9,10 @@ workers_dev = false
 [observability]
 enabled = true
 
+[vars]
+CHANNEL = ""
+DISCORD_CHANNEL_DEV = ""
+
 [[kv_namespaces]]
 binding = "rss"
 id = "80a0b45a3b3c43979dfc1fbad675a647"
