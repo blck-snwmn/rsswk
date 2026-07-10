@@ -11,9 +11,11 @@ $ pnpm run deploy
 
 ## Setting
 ```bash
-$ pnpm wrangler secret put CHANNEL
 $ pnpm wrangler kv namespace create rss
 ```
+
+Set `CHANNEL` and `DISCORD_CHANNEL_DEV` in `[vars]` in `wrangler.toml`.
+
 ### queue
 see: 
 - https://github.com/blck-snwmn/slackworker
