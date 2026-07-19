@@ -22,7 +22,7 @@
 		"oxlint-tsgolint": "0.24.0",
 		"rollup": "4.62.2",
 		"typescript": "7.0.2",
-		"vite": "8.1.4",
+		"vite": "8.1.5",
 		"vitest": "4.1.10",
 		"wrangler": "4.111.0"
 	},
