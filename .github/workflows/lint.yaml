@@ -16,25 +16,12 @@ jobs:
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           run_install: true
-      - run: pnpm run lint
-  fmt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-        with:
-          run_install: true
-      - run: pnpm run fmt:check
-  cf-typegen:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-        with:
-          run_install: true
+      - parallel:
+          - name: Lint
+            run: pnpm run lint
+          - name: Check format
+            run: pnpm run fmt:check
+      # Run type generation after lint because type-aware lint reads worker-configuration.d.ts.
+      # The diff check must also wait for type generation to finish.
       - run: pnpm run cf-typegen
       - run: git diff --exit-code -- worker-configuration.d.ts
