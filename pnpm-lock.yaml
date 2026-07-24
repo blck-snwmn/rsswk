@@ -9,10 +9,10 @@ importers:
   .:
     dependencies:
       fast-xml-parser:
-        specifier: ^5.2.5
+        specifier: 5.10.1
         version: 5.10.1
       robots-parser:
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1
     devDependencies:
       '@cloudflare/vitest-pool-workers':
