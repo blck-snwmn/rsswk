@@ -18,7 +18,7 @@
 		"@cloudflare/vitest-pool-workers": "0.20.1",
 		"@types/node": "26.1.2",
 		"oxfmt": "0.61.0",
-		"oxlint": "1.76.0",
+		"oxlint": "1.77.0",
 		"oxlint-tsgolint": "7.0.2001",
 		"rollup": "4.62.4",
 		"typescript": "7.0.2",
