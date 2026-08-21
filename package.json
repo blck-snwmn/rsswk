@@ -15,7 +15,7 @@
 		"fmt:check": "oxfmt --check src/ test/"
 	},
 	"devDependencies": {
-		"@cloudflare/vitest-pool-workers": "0.21.3",
+		"@cloudflare/vitest-pool-workers": "0.22.0",
 		"@types/node": "26.2.0",
 		"oxfmt": "0.63.0",
 		"oxlint": "1.78.0",
