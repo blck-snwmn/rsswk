@@ -19,7 +19,7 @@
 		"@types/node": "26.6.1",
 		"oxfmt": "0.68.0",
 		"oxlint": "1.83.0",
-		"oxlint-tsgolint": "7.0.2001",
+		"oxlint-tsgolint": "7.0.2002",
 		"rollup": "4.63.3",
 		"typescript": "7.0.2",
 		"vite": "8.3.0",
