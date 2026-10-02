@@ -11,10 +11,10 @@ $ pnpm run deploy
 
 ## Setting
 ```bash
-$ pnpm wrangler kv namespace create rss
+$ pnpm exec cf kv namespaces create --title rss
 ```
 
-Set `DISCORD_CHANNEL_DEV` in `[vars]` in `wrangler.toml`.
+Set `DISCORD_CHANNEL_DEV` in `worker.env` in `cloudflare.config.ts`.
 
 ### queue
 see: 
