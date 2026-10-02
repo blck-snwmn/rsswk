@@ -27,7 +27,7 @@
 		"wrangler": "4.141.0"
 	},
 	"dependencies": {
-		"fast-xml-parser": "5.11.1",
+		"fast-xml-parser": "5.11.2",
 		"robots-parser": "3.0.1"
 	}
 }
