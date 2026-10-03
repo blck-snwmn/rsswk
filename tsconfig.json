@@ -40,5 +40,5 @@
 		"skipLibCheck": true
 	},
 	"exclude": ["test"],
-	"include": [".cloudflare/types/index.d.ts", "src/**/*.ts", "cloudflare.config.ts", "wrangler.config.ts", "vitest.config.mts"]
+	"include": [".cloudflare/types/index.d.ts", "src/**/*.ts", "cloudflare.config.ts", "vitest.config.mts"]
 }
