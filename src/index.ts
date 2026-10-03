@@ -6,12 +6,12 @@ export default {
 		await rssHandler(env);
 		return new Response("Hello World!");
 	},
-	async scheduled(_controller: ScheduledController, env: Env): Promise<void> {
+	async scheduled(_controller: ScheduledController, env: Cloudflare.Env): Promise<void> {
 		await rssHandler(env);
 	},
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler<Cloudflare.Env>;
 
-async function rssHandler(env: Env) {
+async function rssHandler(env: Cloudflare.Env) {
 	const keys = (await env.rss.list()).keys;
 	console.info("keys", keys);
 
@@ -108,7 +108,7 @@ function groupItemsBySize(title: string, items: XMLItem[], maxLength = 1900): XM
 	return groups;
 }
 
-async function sendNotifications(env: Env, title: string, items: XMLItem[]) {
+async function sendNotifications(env: Cloudflare.Env, title: string, items: XMLItem[]) {
 	// Split items into groups that fit within Discord's message limit
 	const itemGroups = groupItemsBySize(title, items);
 
