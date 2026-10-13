@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-plugin": "1.4.0",
-		"@types/node": "26.6.4",
+		"@types/node": "26.6.5",
 		"cf": "1.0.0-beta.13",
 		"oxfmt": "0.72.0",
 		"oxlint": "1.87.0",
