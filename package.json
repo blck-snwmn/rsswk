@@ -15,7 +15,7 @@
 		"fmt:check": "oxfmt --check src/ test/"
 	},
 	"devDependencies": {
-		"@cloudflare/vitest-plugin": "1.4.0",
+		"@cloudflare/vitest-plugin": "1.4.3",
 		"@types/node": "26.6.5",
 		"cf": "1.0.0-beta.14",
 		"oxfmt": "0.72.0",
@@ -23,7 +23,7 @@
 		"oxlint-tsgolint": "7.0.2004",
 		"rollup": "4.64.5",
 		"typescript": "7.0.2",
-		"vitest": "5.0.3",
+		"vitest": "5.0.4",
 		"wrangler": "4.149.0"
 	},
 	"dependencies": {
