@@ -17,11 +17,11 @@
 	"devDependencies": {
 		"@cloudflare/vitest-plugin": "1.4.3",
 		"@types/node": "26.6.5",
-		"cf": "1.0.0-beta.14",
+		"cf": "1.0.0-beta.16",
 		"oxfmt": "0.72.0",
 		"oxlint": "1.87.0",
 		"oxlint-tsgolint": "7.0.2004",
-		"rollup": "4.64.5",
+		"rollup": "4.64.6",
 		"typescript": "7.0.2",
 		"vitest": "5.0.4",
 		"wrangler": "4.149.0"
