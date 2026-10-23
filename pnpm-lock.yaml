@@ -174,8 +174,8 @@ importers:
         version: 3.0.1
     devDependencies:
       '@cloudflare/vitest-plugin':
-        specifier: 1.4.5
-        version: 1.4.5(@types/node@26.6.5)(vitest@5.0.5(@types/node@26.6.5)(vite@8.3.1(@types/node@26.6.5)(esbuild@0.28.2)))
+        specifier: 1.4.6
+        version: 1.4.6(@types/node@26.6.5)(vitest@5.0.5(@types/node@26.6.5)(vite@8.3.1(@types/node@26.6.5)(esbuild@0.28.2)))
       '@types/node':
         specifier: 26.6.5
         version: 26.6.5
@@ -228,8 +228,8 @@ packages:
       workerd:
         optional: true
 
-  '@cloudflare/vitest-plugin@1.4.5':
-    resolution: {integrity: sha512-ximJR8RoxxUYmohcWTVvoXxzYQQINtqSQL30fRZFeDN1CCVrftmqv8OHwB5itHgEYROFtSy/UbP58msHfNIsLw==}
+  '@cloudflare/vitest-plugin@1.4.6':
+    resolution: {integrity: sha512-7hng1qRt3hnZbRS/Z1uWhJyUYi/FlSEM9uYR7z1qCkv+Tmvu6qNlhuSZy2vjJH9mgTHIYJFnl1nBuITITqapxg==}
     peerDependencies:
       vitest: ^4.1.0 || ^5.0.0
 
@@ -1443,6 +1443,10 @@ packages:
     resolution: {integrity: sha512-NmE6Yz7MSdjrfr3lMaMAVO55rIm3+6YXllOkJOMy6pPQITDuDeo0PYRedp7pju2olNWmrAlf1i1LIWYfGQvvuw==}
     engines: {node: '>=22.0.0'}
 
+  miniflare@5.20261019.1-beta:
+    resolution: {integrity: sha512-1n7MN2UqZnPniyYAqNuV1YEAaja66ozKGVCc5ZTmYQhTubnoAwGLccwb+ZWYLOajuw3pOaJ70u//bZMuURlRew==}
+    engines: {node: '>=22.0.0'}
+
   nanoid@3.3.18:
     resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -1686,6 +1690,16 @@ packages:
       '@cloudflare/workers-types':
         optional: true
 
+  wrangler@4.151.3:
+    resolution: {integrity: sha512-mzPQLmkAhZUV7CdiAhE+hiIAJlS9xPL6vZe1B8oQFuWxFu7nmQnvHAVjcAcabwSGkXFXH9uspzXwHOFrfbQmqQ==}
+    engines: {node: '>=22.0.0'}
+    hasBin: true
+    peerDependencies:
+      '@cloudflare/workers-types': ^5.20261019.1
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
+
   ws@8.21.0:
     resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
     engines: {node: '>=10.0.0'}
@@ -1738,13 +1752,13 @@ snapshots:
     optionalDependencies:
       workerd: 1.20261019.1
 
-  '@cloudflare/vitest-plugin@1.4.5(@types/node@26.6.5)(vitest@5.0.5(@types/node@26.6.5)(vite@8.3.1(@types/node@26.6.5)(esbuild@0.28.2)))':
+  '@cloudflare/vitest-plugin@1.4.6(@types/node@26.6.5)(vitest@5.0.5(@types/node@26.6.5)(vite@8.3.1(@types/node@26.6.5)(esbuild@0.28.2)))':
     dependencies:
       cjs-module-lexer: 1.2.3
       esbuild: 0.28.2
-      miniflare: 5.20261019.0-beta(@types/node@26.6.5)
+      miniflare: 5.20261019.1-beta(@types/node@26.6.5)
       vitest: 5.0.5(@types/node@26.6.5)(vite@8.3.1(@types/node@26.6.5)(esbuild@0.28.2))
-      wrangler: 4.151.2(@types/node@26.6.5)
+      wrangler: 4.151.3(@types/node@26.6.5)
       zod: 4.6.5
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
@@ -2490,6 +2504,19 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  miniflare@5.20261019.1-beta(@types/node@26.6.5):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      sharp: 0.35.5(@types/node@26.6.5)
+      undici: 7.29.1
+      workerd: 1.20261019.1
+      ws: 8.21.0
+      youch: 4.1.0-beta.10
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - utf-8-validate
+
   nanoid@3.3.18: {}
 
   obug@3.0.0: {}
@@ -2761,6 +2788,23 @@ snapshots:
       blake3-wasm: 2.1.5
       esbuild: 0.28.2
       miniflare: 5.20261019.0-beta(@types/node@26.6.5)
+      path-to-regexp: 6.3.0
+      unenv: 2.0.0-rc.24
+      workerd: 1.20261019.1
+    optionalDependencies:
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - utf-8-validate
+
+  wrangler@4.151.3(@types/node@26.6.5):
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.5.0
+      '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261019.1)
+      blake3-wasm: 2.1.5
+      esbuild: 0.28.2
+      miniflare: 5.20261019.1-beta(@types/node@26.6.5)
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20261019.1
