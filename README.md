@@ -39,3 +39,17 @@ aqua install
 ```bash
 lefthook install
 ```
+
+## Formal specification
+
+[spec/rsswk.qnt](spec/rsswk.qnt) is a [Quint](https://quint-lang.org/) model of how `rssHandler` updates the KV and sends notifications. It compares the current order (put to KV, then send to the queue) with the reversed order (send, then put) when a run fails in between:
+
+| Order | Failure between the two steps | Property that holds |
+| --- | --- | --- |
+| put → send (current) | the item is marked as read but never sent | `noDup` (no duplicate sends) |
+| send → put | the item is sent again on the next run | `noLoss` (no lost items), `noDupUnlessFailed` |
+
+```bash
+pnpm run spec:test    # scenario tests (each one shows a violation or a guarantee)
+pnpm run spec:verify  # checks the properties that hold, with Apalache (requires Java)
+```
