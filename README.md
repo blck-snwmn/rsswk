@@ -42,14 +42,11 @@ lefthook install
 
 ## Formal specification
 
-[spec/rsswk.qnt](spec/rsswk.qnt) is a [Quint](https://quint-lang.org/) model of how `rssHandler` updates the KV and sends notifications. It compares the current order (put to KV, then send to the queue) with the reversed order (send, then put) when a run fails in between:
+[spec/rsswk.qnt](spec/rsswk.qnt) is a [Quint](https://quint-lang.org/) model of how `rssHandler` saves the last seen item to KV and then sends notifications to the queue. It checks `noLoss`: every item marked as read in KV has been sent.
 
-| Order | Failure between the two steps | Property that holds |
-| --- | --- | --- |
-| put → send (current) | the item is marked as read but never sent | `noDup` (no duplicate sends) |
-| send → put | the item is sent again on the next run | `noLoss` (no lost items), `noDupUnlessFailed` |
+`noLoss` does not hold for the current implementation. If a run fails after the KV put and before all messages are sent, the unsent items are never sent on later runs.
 
 ```bash
-pnpm run spec:test    # scenario tests (each one shows a violation or a guarantee)
-pnpm run spec:verify  # checks the properties that hold, with Apalache (requires Java)
+pnpm run spec:test    # scenario tests
+pnpm run spec:verify  # checks noLoss with Apalache (requires Java); reports a counterexample
 ```
