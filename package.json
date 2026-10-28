@@ -14,7 +14,8 @@
 		"fmt": "oxfmt --write src/ test/",
 		"fmt:check": "oxfmt --check src/ test/",
 		"spec:test": "quint test spec/rsswk.qnt",
-		"spec:verify": "quint verify spec/rsswk.qnt --invariant=noLoss"
+		"spec:verify:loss": "quint verify spec/rsswk.qnt --invariant=noLoss",
+		"spec:verify:dup": "quint verify spec/rsswk.qnt --invariant=noDup"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-plugin": "1.4.7",

@@ -5,7 +5,9 @@
 //   2. フィードを取得して未読の記事を取り出す（なければ何もしない）
 //   3. KV に既読位置を保存する（put）
 //   4. 未読の記事をいくつかのメッセージに分けて、順にキューへ送信する（send）
-// この実装で、既読にした記事がすべて送信されるか（noLoss）を検査する。
+// この実装について、次の2つを検査する。
+// - noLoss: 既読にした記事は、すべて送信されている（取りこぼしがない）
+// - noDup:  同じ記事を2回送信していない（重複がない）
 //
 // 抽象化:
 // - フィードの記事は Items の先頭から順に公開されていく（追記のみ）
@@ -64,10 +66,21 @@ module rsswk {
     }
   }
 
-  action step = any { publish, runOk, runFailAfterPut }
+  // 未読の記事がないので、何もせずに終わる
+  action runNoNewItems = all {
+    unread.length() == 0,
+    published' = published,
+    lastSeen' = lastSeen,
+    sent' = sent,
+  }
+
+  action step = any { publish, runOk, runFailAfterPut, runNoNewItems }
 
   // 既読にした記事は、すべて送信されている（取りこぼしがない）
   val noLoss = elems(Items.slice(0, lastSeen)).subseteq(elems(sent))
+
+  // 同じ記事を2回送信していない（重複がない）
+  val noDup = sent.length() == elems(sent).size()
 
   // 失敗がなければ取りこぼしは起きない
   run happyPathTest =
@@ -76,14 +89,14 @@ module rsswk {
       .then(publish)
       .then(publish)
       .then(runOk)
-      .expect(noLoss and sent == Items)
+      .expect(noLoss and noDup and sent == Items)
 
   // put の直後に失敗すると、その記事は以後送信されない
   run lossAfterPutTest =
     init
       .then(runFailAfterPut)
-      .expect(not(noLoss))
+      .expect(not(noLoss) and noDup)
       .then(publish)
       .then(runOk)
-      .expect(not(noLoss) and sent == ["b"])
+      .expect(not(noLoss) and noDup and sent == ["b"])
 }
