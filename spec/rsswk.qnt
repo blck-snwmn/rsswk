@@ -1,34 +1,34 @@
-// src/index.ts の rssHandler が、1つのフィードを処理する流れのモデル。
+// A model of how rssHandler in src/index.ts processes a single feed.
 //
-// 実装は次の順で動く:
-//   1. KV から既読位置を読む
-//   2. フィードを取得して未読の記事を取り出す（なければ何もしない）
-//   3. KV に既読位置を保存する（put）
-//   4. 未読の記事をいくつかのメッセージに分けて、順にキューへ送信する（send）
-// この実装について、次の2つを検査する。
-// - noLoss: 既読にした記事は、すべて送信されている（取りこぼしがない）
-// - noDup:  同じ記事を2回送信していない（重複がない）
+// The implementation works in this order:
+//   1. Read the last seen position from KV
+//   2. Fetch the feed and pick the unread items (do nothing if there are none)
+//   3. Save the new last seen position to KV (put)
+//   4. Split the unread items into messages and send them to the queue in order (send)
+// It checks two properties of this implementation:
+// - noLoss: every item marked as read has been sent (no lost items)
+// - noDup:  no item is sent twice (no duplicates)
 //
-// 抽象化:
-// - フィードの記事は Items の先頭から順に公開されていく（追記のみ）
-// - KV に保存する「最後に見た記事の link」は、何件目まで見たかの整数で表す
-// - 実行1回分（rssHandler の1回の呼び出し）を1つの action として扱う
-// - put より前の失敗（フィード取得の失敗など）は状態を変えないので扱わない
+// Abstractions:
+// - Items are published in order from the head of Items (append only)
+// - The "link of the last seen item" stored in KV is an index into Items
+// - One run (one call of rssHandler) is a single action
+// - Failures before the put (e.g. fetching the feed) change no state, so they are not modeled
 module rsswk {
-  // フィードに公開されうる記事（公開順）
+  // Items that can be published to the feed, in publication order
   pure val Items = ["a", "b", "c"]
 
-  // リストに含まれる要素の集合
+  // The set of elements in a list
   pure def elems(l: List[str]): Set[str] = l.foldl(Set(), (s, x) => s.union(Set(x)))
 
-  // フィードに公開済みの件数
+  // Number of items published to the feed
   var published: int
-  // KV に保存した既読位置（Items の何件目まで見たか）
+  // Last seen position stored in KV (how many items of Items have been read)
   var lastSeen: int
-  // キューに送信した記事（送信順）
+  // Items sent to the queue, in sending order
   var sent: List[str]
 
-  // 未読の記事
+  // Unread items
   val unread: List[str] = Items.slice(lastSeen, published)
 
   action init = all {
@@ -37,7 +37,7 @@ module rsswk {
     sent' = [],
   }
 
-  // 新しい記事が公開される
+  // A new item is published
   action publish = all {
     published < Items.length(),
     published' = published + 1,
@@ -45,7 +45,7 @@ module rsswk {
     sent' = sent,
   }
 
-  // 実行が最後まで成功する
+  // A run completes successfully
   action runOk = all {
     unread.length() > 0,
     published' = published,
@@ -53,9 +53,9 @@ module rsswk {
     sent' = sent.concat(unread),
   }
 
-  // put の後、送信の途中で失敗する。
-  // 未読の記事のうち先頭 n 件だけが送信される（n = 0 なら1件も送れていない）。
-  // 実装ではメッセージ単位で送るので、実際に起こりうる n はこの一部になる。
+  // A run fails while sending, after the put.
+  // Only the first n unread items are sent (none when n = 0).
+  // The implementation sends whole messages, so only some of these n can actually occur.
   action runFailAfterPut = all {
     unread.length() > 0,
     nondet n = 0.to(unread.length() - 1).oneOf()
@@ -66,7 +66,7 @@ module rsswk {
     }
   }
 
-  // 未読の記事がないので、何もせずに終わる
+  // A run finds no unread items and does nothing
   action runNoNewItems = all {
     unread.length() == 0,
     published' = published,
@@ -76,13 +76,13 @@ module rsswk {
 
   action step = any { publish, runOk, runFailAfterPut, runNoNewItems }
 
-  // 既読にした記事は、すべて送信されている（取りこぼしがない）
+  // Every item marked as read has been sent (no lost items)
   val noLoss = elems(Items.slice(0, lastSeen)).subseteq(elems(sent))
 
-  // 同じ記事を2回送信していない（重複がない）
+  // No item is sent twice (no duplicates)
   val noDup = sent.length() == elems(sent).size()
 
-  // 失敗がなければ取りこぼしは起きない
+  // Without failures, no item is lost
   run happyPathTest =
     init
       .then(runOk)
@@ -91,7 +91,7 @@ module rsswk {
       .then(runOk)
       .expect(noLoss and noDup and sent == Items)
 
-  // put の直後に失敗すると、その記事は以後送信されない
+  // If a run fails right after the put, the item is never sent afterwards
   run lossAfterPutTest =
     init
       .then(runFailAfterPut)
