@@ -2,6 +2,12 @@ name: Spec
 
 on:
   push:
+    paths:
+      - "spec/**"
+      - src/index.ts
+      - package.json
+      - pnpm-lock.yaml
+      - .github/workflows/spec.yaml
 
 permissions:
   contents: read

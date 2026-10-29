@@ -58,4 +58,4 @@ pnpm run spec:verify:loss  # checks noLoss with Apalache (requires Java)
 pnpm run spec:verify:dup   # checks noDupUnlessFailed with Apalache (requires Java)
 ```
 
-The [Spec workflow](.github/workflows/spec.yaml) runs these on every push. It checks the model, not the code: update the model when you change how `rssHandler` sends or saves items.
+The [Spec workflow](.github/workflows/spec.yaml) runs these when the model, `src/index.ts` or the Quint version changes. It checks the model, not the code: update the model when you change how `rssHandler` sends or saves items.
