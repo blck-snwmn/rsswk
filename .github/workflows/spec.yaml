@@ -1,7 +1,16 @@
 name: Spec
 
 on:
+  pull_request:
+    paths:
+      - "spec/**"
+      - src/index.ts
+      - package.json
+      - pnpm-lock.yaml
+      - .github/workflows/spec.yaml
   push:
+    branches:
+      - main
     paths:
       - "spec/**"
       - src/index.ts
