@@ -12,10 +12,14 @@
 		"lint": "oxlint --deny-warnings .",
 		"lint:fix": "oxlint --deny-warnings . --fix",
 		"fmt": "oxfmt --write src/ test/",
-		"fmt:check": "oxfmt --check src/ test/"
+		"fmt:check": "oxfmt --check src/ test/",
+		"spec:test": "quint test spec/rsswk.qnt",
+		"spec:verify:loss": "quint verify spec/rsswk.qnt --invariant=noLoss",
+		"spec:verify:dup": "quint verify spec/rsswk.qnt --invariant=noDup"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-plugin": "1.4.7",
+		"@informalsystems/quint": "0.33.0",
 		"@types/node": "26.6.5",
 		"cf": "1.0.0-beta.21",
 		"oxfmt": "0.74.0",

@@ -172,3 +172,6 @@ dist
 .wrangler/
 
 .cloudflare/
+
+# Apalache (quint verify) output
+_apalache-out/
