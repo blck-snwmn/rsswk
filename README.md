@@ -42,17 +42,20 @@ lefthook install
 
 ## Formal specification
 
-[spec/rsswk.qnt](spec/rsswk.qnt) is a [Quint](https://quint-lang.org/) model of how `rssHandler` saves the last seen item to KV and then sends notifications to the queue. It checks two properties of the current implementation:
+[spec/rsswk.qnt](spec/rsswk.qnt) is a [Quint](https://quint-lang.org/) model of how `rssHandler` sends notifications to the queue and then saves the last seen item to KV. It checks these properties:
 
 | Property | Meaning | Result |
 | --- | --- | --- |
-| `noLoss` | every item marked as read in KV has been sent | does not hold |
-| `noDup` | no item is sent twice | holds |
+| `noLoss` | every item marked as read in KV has been sent | holds |
+| `noDup` | no item is sent twice | does not hold |
+| `noDupUnlessFailed` | duplicates are sent only after a run has failed | holds |
 
-`noLoss` fails because the KV put happens before sending: if a run fails after the put and before all messages are sent, the unsent items are never sent on later runs.
+Sending before the KV put means a failed run is retried on the next run, so no item is lost. If a run fails after some messages were sent, the next run sends those items again.
 
 ```bash
 pnpm run spec:test         # scenario tests
-pnpm run spec:verify:loss  # checks noLoss with Apalache (requires Java); reports a counterexample
-pnpm run spec:verify:dup   # checks noDup with Apalache (requires Java); finds no violation
+pnpm run spec:verify:loss  # checks noLoss with Apalache (requires Java)
+pnpm run spec:verify:dup   # checks noDupUnlessFailed with Apalache (requires Java)
 ```
+
+The [Spec workflow](.github/workflows/spec.yaml) runs these on every push. It checks the model, not the code: update the model when you change how `rssHandler` sends or saves items.

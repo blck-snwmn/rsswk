@@ -36,11 +36,13 @@ async function rssHandler(env: Cloudflare.Env) {
 			continue;
 		}
 
+		// Send before saving the latest item, so that a failed send is retried on the next run
+		// instead of the items being lost. A failure after sending can cause duplicates.
+		await sendNotifications(env, rss.channel.title, uncheckedRssItems);
+
 		const latestItem = uncheckedRssItems[0].link;
 		await env.rss.put(rssURL, latestItem);
 		console.info("Put latest item", latestItem);
-
-		await sendNotifications(env, rss.channel.title, uncheckedRssItems);
 	}
 }
 
