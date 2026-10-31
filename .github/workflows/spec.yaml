@@ -1,0 +1,47 @@
+name: Spec
+
+on:
+  pull_request:
+    paths:
+      - "spec/**"
+      - src/index.ts
+      - package.json
+      - pnpm-lock.yaml
+      - .github/workflows/spec.yaml
+  push:
+    branches:
+      - main
+    paths:
+      - "spec/**"
+      - src/index.ts
+      - package.json
+      - pnpm-lock.yaml
+      - .github/workflows/spec.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          run_install: true
+      - name: Run scenario tests
+        run: pnpm run spec:test
+      # quint verify uses Apalache, which needs Java 21. The runner defaults to an older Java,
+      # so switch to the preinstalled Java 21.
+      - name: Use Java 21
+        run: |
+          echo "JAVA_HOME=${JAVA_HOME_21_X64}" >> "$GITHUB_ENV"
+          echo "${JAVA_HOME_21_X64}/bin" >> "$GITHUB_PATH"
+      - name: Show Java version
+        run: java -version
+      - name: Verify no lost items
+        run: pnpm run spec:verify:loss
+      - name: Verify duplicates only after failures
+        run: pnpm run spec:verify:dup

@@ -379,4 +379,45 @@ describe("test fetch", () => {
 		expect(messages[0].message.content.length).toBeLessThanOrEqual(2000);
 		expect(messages[1].message.content.length).toBeLessThanOrEqual(2000);
 	});
+
+	it("does not save the latest item when sending fails", async () => {
+		vi.spyOn(env.DQUEUE, "send").mockRejectedValue(new Error("queue unavailable"));
+
+		await env.rss.put("http://example.com", "");
+
+		fetchMock
+			.get("http://example.com")
+			.intercept({
+				path: "/",
+				method: "GET",
+			})
+			.reply(
+				200,
+				`<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+						<channel>
+							<title>CHANNEL_TITLE</title>
+							<link>http://example.com/chanel</link>
+							<description>this is channel</description>
+						</channel>
+						<item>
+							<title>item_title_1</title>
+							<link>http://example.com/chanel/items/1</link>
+							<dc:date>2024-12-26T15:00:00Z</dc:date>
+						</item>
+						<item>
+							<title>item_title_2</title>
+							<link>http://example.com/chanel/items/2</link>
+							<dc:date>2024-12-26T15:00:00Z</dc:date>
+						</item>
+					</rdf:RDF>`,
+			);
+
+		const request = new IncomingRequest("http://example.com");
+		const ctx = createExecutionContext();
+		await expect(worker.fetch(request, env, ctx)).rejects.toThrow("queue unavailable");
+		await waitOnExecutionContext(ctx);
+
+		// The item is not marked as read, so the next run sends it again
+		expect(await env.rss.get("http://example.com")).toBe("");
+	});
 });
