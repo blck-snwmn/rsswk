@@ -54,8 +54,8 @@ Sending before the KV put means a failed run is retried on the next run, so no i
 
 ```bash
 pnpm run spec:test         # scenario tests
-pnpm run spec:verify:loss  # checks noLoss with Apalache (requires Java)
-pnpm run spec:verify:dup   # checks noDupUnlessFailed with Apalache (requires Java)
+pnpm run spec:verify:loss  # checks noLoss with Apalache (requires Java 21)
+pnpm run spec:verify:dup   # checks noDupUnlessFailed with Apalache (requires Java 21)
 ```
 
 The [Spec workflow](.github/workflows/spec.yaml) runs these when the model, `src/index.ts` or the Quint version changes. It checks the model, not the code: update the model when you change how `rssHandler` sends or saves items.
