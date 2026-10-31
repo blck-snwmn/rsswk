@@ -33,7 +33,14 @@ jobs:
           run_install: true
       - name: Run scenario tests
         run: pnpm run spec:test
-      # quint verify uses Apalache, which needs the Java runtime preinstalled on the runner
+      # quint verify uses Apalache, which needs Java 21. The runner defaults to an older Java,
+      # so switch to the preinstalled Java 21.
+      - name: Use Java 21
+        run: |
+          echo "JAVA_HOME=${JAVA_HOME_21_X64}" >> "$GITHUB_ENV"
+          echo "${JAVA_HOME_21_X64}/bin" >> "$GITHUB_PATH"
+      - name: Show Java version
+        run: java -version
       - name: Verify no lost items
         run: pnpm run spec:verify:loss
       - name: Verify duplicates only after failures
