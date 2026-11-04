@@ -177,8 +177,8 @@ importers:
         specifier: 1.4.9
         version: 1.4.9(@types/node@26.6.5)(vitest@5.0.5(@types/node@26.6.5)(vite@8.3.1(@types/node@26.6.5)(esbuild@0.28.2)))
       '@informalsystems/quint':
-        specifier: 0.33.0
-        version: 0.33.0
+        specifier: 0.33.1
+        version: 0.33.1
       '@types/node':
         specifier: 26.6.5
         version: 26.6.5
@@ -635,8 +635,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@informalsystems/quint@0.33.0':
-    resolution: {integrity: sha512-1hr+l+3wyKimjNXNl9lovpwmH5C9Ck898FL4yGbuEmFPiz7YRqvFvsB9hlHsaYukXqdUY5nuFKn/qiCon0O88g==}
+  '@informalsystems/quint@0.33.1':
+    resolution: {integrity: sha512-EYsgxr9SEsumYiix6pD8jbXPiPJoNbQaUxnrLE+dSVL+B9eQHPkVjSW7CBFEoBeMhau/1n70DAQOKvgxa1pVfw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1415,9 +1415,9 @@ packages:
   '@vitest/spy@5.0.5':
     resolution: {integrity: sha512-lwJRExuH417257Q5wv9QYugN9IMJkoxcrKrYxGPQkBzl7wlNpTUxD/5yNX4ESKVUIShKPgkGchYPFMWOOk0wzw==}
 
-  adm-zip@0.5.18:
-    resolution: {integrity: sha512-ufJnssQGbxzLNS1Ho9bCtX4rQKCCvoVuDLHoJyc3F9dOGDB4BkWs2Ci0kv53lqocAEQ/Cbi+I2XCsNYGqVYqng==}
-    engines: {node: '>=12.0'}
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
+    engines: {node: '>=14.0'}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -2334,7 +2334,7 @@ snapshots:
   '@img/sharp-win32-x64@0.35.5':
     optional: true
 
-  '@informalsystems/quint@0.33.0':
+  '@informalsystems/quint@0.33.1':
     dependencies:
       '@grpc/grpc-js': 1.14.6
       '@grpc/proto-loader': 0.7.15
@@ -2344,7 +2344,7 @@ snapshots:
       '@types/line-column': 1.0.2
       '@types/lodash.clonedeep': 4.5.0
       '@types/seedrandom': 3.0.8
-      adm-zip: 0.5.18
+      adm-zip: 0.6.1
       antlr4ts: 0.5.0-alpha.4
       chalk: 4.1.2
       cli-progress: 3.12.0
@@ -2355,6 +2355,7 @@ snapshots:
       line-column: 1.0.2
       lodash: 4.18.1
       lodash.clonedeep: 4.5.0
+      protobufjs: 7.6.6
       seedrandom: 3.0.5
       tar: 7.5.22
       yargs: 17.7.3
@@ -2805,7 +2806,7 @@ snapshots:
 
   '@vitest/spy@5.0.5': {}
 
-  adm-zip@0.5.18: {}
+  adm-zip@0.6.1: {}
 
   ansi-regex@5.0.1: {}
 
