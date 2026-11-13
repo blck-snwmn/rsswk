@@ -22,7 +22,7 @@
 		"@informalsystems/quint": "0.33.1",
 		"@types/node": "26.6.6",
 		"cf": "1.0.0-beta.28",
-		"oxfmt": "0.76.0",
+		"oxfmt": "0.77.0",
 		"oxlint": "1.91.0",
 		"oxlint-tsgolint": "7.0.2006",
 		"rollup": "4.65.1",
