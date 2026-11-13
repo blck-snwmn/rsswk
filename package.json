@@ -24,7 +24,7 @@
 		"cf": "1.0.0-beta.28",
 		"oxfmt": "0.76.0",
 		"oxlint": "1.91.0",
-		"oxlint-tsgolint": "7.0.2005",
+		"oxlint-tsgolint": "7.0.2006",
 		"rollup": "4.65.1",
 		"typescript": "7.0.2",
 		"vitest": "5.0.5",
