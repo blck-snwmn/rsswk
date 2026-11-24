@@ -23,7 +23,7 @@
 		"@types/node": "26.6.6",
 		"cf": "1.0.0-rc.0",
 		"oxfmt": "0.78.0",
-		"oxlint": "1.93.0",
+		"oxlint": "1.94.0",
 		"oxlint-tsgolint": "7.0.2007",
 		"rollup": "4.65.1",
 		"typescript": "7.0.2",
