@@ -179,8 +179,8 @@ importers:
         specifier: 5.12.1
         version: 5.12.1
       robots-parser:
-        specifier: 3.0.1
-        version: 3.0.1
+        specifier: 3.1.1
+        version: 3.1.1
     devDependencies:
       '@cloudflare/vitest-plugin':
         specifier: 1.4.12
@@ -1807,8 +1807,8 @@ packages:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
 
-  robots-parser@3.0.1:
-    resolution: {integrity: sha512-s+pyvQeIKIZ0dx5iJiQk1tPLJAWln39+MI5jtM8wnyws+G5azk+dMnMX0qfbqNetKKNgcWWOdi0sfm+FbQbgdQ==}
+  robots-parser@3.1.1:
+    resolution: {integrity: sha512-ltsI9/0CiaaZpnJeLT4vwK86cW1AfSXoBgnQHIaCtBrg4K8UckV7HakNzWfG8UvT2hqwrLZ1YWilWMEiynBg6g==}
     engines: {node: '>=10.0.0'}
 
   rolldown@1.2.11:
@@ -3238,7 +3238,7 @@ snapshots:
 
   require-directory@2.1.1: {}
 
-  robots-parser@3.0.1: {}
+  robots-parser@3.1.1: {}
 
   rolldown@1.2.11:
     dependencies:
